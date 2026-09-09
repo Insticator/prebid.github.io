@@ -6,6 +6,9 @@ description: An beginner's guide to header bidding.
 sidebarType: 0
 ---
 
+<div style="text-align: center;">
+  <img src="/assets/images/logos/prebid-js-logo.png" alt="Prebid.js Logo" width="500" height="80" style="max-width: 100%; height: auto;" />
+</div>
 
 # Introduction to Header Bidding
 
@@ -23,7 +26,7 @@ Let’s start by saying that the term “header bidding” is a bit of a misnome
 
 A video overview of header bidding.
 
-<div style="padding:56.25% 0 0 0;margin: 1rem 0;position:relative;"><iframe src="https://player.vimeo.com/video/820684821?h=d55a008b4b&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Introduction to Header Bidding"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+{% include vimeo-iframe.html id="820684821" title="Introduction to Header Bidding" %}
 
 Further Reading:
 
