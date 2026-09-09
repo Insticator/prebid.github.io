@@ -184,13 +184,11 @@ var adUnits = [
 
 #### Audio parameters
 
-Audio is supported in Prebid.js 10.6 and later, which is the release that added the `audio` media type to Prebid core.
-
 {: .table .table-bordered .table-striped }
 | Name                   | Scope       | Description                                                                                                        | Example                       |
 |------------------------|-------------|--------------------------------------------------------------------------------------------------------------------|-------------------------------|
-| `audio.mimes`          | recommended | Audio MIME types. Omitted or malformed lists are dropped and defaulted by Insticator rather than losing the bid.    | `['audio/mp4',`<br/>`'audio/mpeg',`<br/>`'audio/aac',`<br/>`'audio/ogg']` |
-| `audio.minduration`    | optional    | Minimum audio ad duration in seconds. Must not exceed `maxduration`, or the bid request is rejected.                | `5`                           |
+| `audio.mimes`          | recommended | Audio MIME types                                                | `['audio/mp4',`<br/>`'audio/mpeg',`<br/>`'audio/aac',`<br/>`'audio/ogg']` |
+| `audio.minduration`    | optional    | Minimum audio ad duration in seconds                            | `5`                           |
 | `audio.maxduration`    | optional    | Maximum audio ad duration in seconds                                                                                | `30`                          |
 | `audio.protocols`      | optional    | Supported audio bid response protocol values. (see OpenRTB v2.5 section 5.8 for options)                            | `[2, 3, 5, 6, 7, 8]`          |
 | `audio.startdelay`     | optional    | Start delay in seconds for pre-roll, mid-roll or post-roll placements. (see OpenRTB v2.5 section 5.12 for options)   | `0`                           |
@@ -201,14 +199,12 @@ Audio is supported in Prebid.js 10.6 and later, which is the release that added 
 | `audio.delivery`       | optional    | Supported delivery methods (1 = streaming, 2 = progressive, 3 = download). If none specified, assume all supported.  | `[1, 2]`                      |
 | `audio.api`            | optional    | List of supported API frameworks for this impression. (see OpenRTB v2.5 section 5.6 for options)                    | `[2, 7]`                      |
 | `audio.companiontype`  | optional    | Supported companion ad types. (see OpenRTB v2.5 section 5.14 for options)                                           | `[1, 2]`                      |
-| `audio.maxseq`         | optional    | Maximum number of ads in a dynamic audio ad pod. Must be a positive integer.                                        | `4`                           |
-| `audio.poddur`         | optional    | Total time in seconds of an audio ad pod. Must be a positive integer.                                               | `120`                         |
+| `audio.maxseq`         | optional    | Maximum number of ads in a dynamic audio ad pod                 | `4`                           |
+| `audio.poddur`         | optional    | Total time in seconds of an audio ad pod                        | `120`                         |
 | `audio.feed`           | optional    | Type of audio feed. 1 = Music Streaming Service, 2 = FM/AM Broadcast, 3 = Podcast, 4 = Catch-up Radio, 5 = Web Radio, 6 = Video Game, 7 = Text to Speech. | `3` |
 | `audio.stitched`       | optional    | Indicates if the ad is stitched into the audio content, where 0 = no, 1 = yes                                        | `0`                           |
 | `audio.nvol`           | optional    | Volume normalization mode. 0 = None, 1 = Ad Volume Average Normalized to Content, 2 = Ad Volume Peak Normalized to Content, 3 = Ad Loudness Normalized to Content, 4 = Custom. | `1` |
-| `audio.context`        | optional    | Audio delivery context. Forwarded to Insticator as-is.                                                              | `'instream'`                  |
-
-Insticator returns audio creatives as VAST, exposed on the bid as `vastXml` with a matching `vastUrl`. The OpenRTB Audio object carries no width or height, so audio bids are returned without a size.
+| `audio.context`        | optional    | Audio delivery context                                          | `'instream'`                  |
 
 ### Example
 
