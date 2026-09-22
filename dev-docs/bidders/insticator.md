@@ -11,7 +11,7 @@ coppa_supported: true
 gdpr_supported: true
 schain_supported: true
 floors_supported: true
-media_types: banner, video
+media_types: banner, video, native
 multiformat_supported: will-bid-on-any
 pbjs: true
 pbs: true
@@ -169,6 +169,44 @@ var adUnits = [
                 linearity: 1,
                 minbitrate: 10,
                 maxbitrate: 10000
+            }
+        },
+        bids: [{
+            bidder: 'insticator',
+            params: {
+                adUnitId: 'example_adunit_id',
+                publisherId: 'example_publisher_id',
+            }
+        }],
+        ...
+    }];
+```
+
+#### Native
+
+Insticator supports ORTB-style native ad units (Prebid.js 8.0+). Declare the native assets
+via `mediaTypes.native.ortb` per the [OpenRTB Dynamic Native Ads 1.2 spec](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf);
+the winning bid returns the native response object on `bid.native.ortb`.
+
+### Example
+
+```javascript
+var adUnits = [
+    {
+        code: 'insticator-native-ad-3',
+        mediaTypes: {
+            native: {
+                ortb: {
+                    assets: [
+                        { id: 1, required: 1, title: { len: 90 } },
+                        { id: 2, required: 1, img: { type: 3, wmin: 300, hmin: 250 } },
+                        { id: 3, required: 0, data: { type: 1, len: 25 } },
+                        { id: 4, required: 0, data: { type: 12, len: 15 } }
+                    ],
+                    eventtrackers: [
+                        { event: 1, methods: [1, 2] }
+                    ]
+                }
             }
         },
         bids: [{
