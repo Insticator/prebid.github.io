@@ -11,7 +11,8 @@ coppa_supported: true
 gdpr_supported: true
 schain_supported: true
 floors_supported: true
-media_types: banner, video
+fpd_supported: true
+media_types: banner, video, audio
 multiformat_supported: will-bid-on-any
 pbjs: true
 pbs: true
@@ -23,24 +24,26 @@ userIds: all
 ### Bid Params
 
 {: .table .table-bordered .table-striped }
-| Name                        | Scope    | Description                                                                             | Example                            | Type     |
-|-----------------------------|----------|-----------------------------------------------------------------------------------------|------------------------------------|----------|
-| `adUnitId`                  | Required | The ad unit ID provided by Insticator                                                   | `'test'`                           | `string` |
-| `publisherId`               | optional | The publisher ID provided by Insticator                                                 | `'test'`                           | `string` |
-| `yob`                       | optional | Year of Birth                                                                           | `'1982'`                           | `string` |
-| `gender`                    | optional | Gender                                                                                  | `'M'`                              | `string` |
-| `instl`                     | optional | 1 = the ad is interstitial or full screen, 0 = not interstitial.                        | `1`                                | `number` |
-| `pos`                       | optional | ad position as per IAB standards                                                        | `1`                                | `number` |
-| `bid_endpoint_request_url`  | optional | Url string representing the endpoint Insticator adaptor should make the request bids to.| `https://ex.ingage.com/v1/openrtb` | `string` |
-| `floor`                     | optional | Sets a floor for bidder.                                                                | `0.50`                             | `float`  |
-| `bidfloorcur`               | optional | Currency of the floor. (Insticator only supports USD floors)                            | `USD`                              | `string` |
+| Name                       | Scope    | Description                                                                              | Example                            | Type      |
+|----------------------------|----------|------------------------------------------------------------------------------------------|------------------------------------|-----------|
+| `adUnitId`                 | Required | The ad unit ID provided by Insticator                                                    | `'test'`                           | `string`  |
+| `publisherId`              | optional | The publisher ID provided by Insticator                                                  | `'test'`                           | `string`  |
+| `user.yob`                 | optional | Year of birth                                                                            | `1982`                             | `integer` |
+| `user.gender`              | optional | Gender: `M`, `F` or `O`                                                                  | `'M'`                              | `string`  |
+| `user.keywords`            | optional | Comma separated keywords                                                                 | `'kw1,kw2'`                        | `string`  |
+| `user.data`                | optional | OpenRTB user.data segments, concatenated after `ortb2.user.data`                         | `[{ name: 'p' }]`                  | `array`   |
+| `user.ext`                 | optional | Merged under `user.ext`, taking precedence over `ortb2.user.ext`                         | `{ custom: 'value' }`              | `object`  |
+| `bid_endpoint_request_url` | optional | Url string representing the endpoint Insticator adaptor should make the request bids to. | `https://ex.ingage.com/v1/openrtb` | `string`  |
+| `floor`                    | optional | Sets a floor for bidder.                                                                 | `0.50`                             | `float`   |
+| `bidfloorcur`              | optional | Currency of the floor. (Insticator only supports USD floors)                             | `USD`                              | `string`  |
 
 ### Banner Params
 
 {: .table .table-bordered .table-striped }
-| Name          | Scope    | Description               | Example              | Type     |
-|---------------|----------|---------------------------|----------------------|----------|
-| `pos`         | optional | ad position as per IAB standards       | `1`                | `number` |
+| Name  | Scope    | Description                      | Example               | Type     |
+|-------|----------|----------------------------------|-----------------------|----------|
+| `pos` | optional | ad position as per IAB standards | `1`                   | `number` |
+| `ext` | optional | Exchange-specific extensions     | `{ custom: 'value' }` | `object` |
 
 ### Example
 
@@ -72,16 +75,32 @@ var adUnitsBannerOnly = [
 
 #### First Party Data
 
-In release 8.45 and later, Insticator has added support for first party data which are optional and partners can send us. The following fields are supported:
+Insticator supports the following optional first party data fields:
 
+* ortb2.ext
+* ortb2.source.ext
 * ortb2.site.keywords
 * ortb2.site.content.*
 * ortb2.site.search
 * ortb2.site.cat
 * ortb2.site.pagecat
 * ortb2.site.sectioncat
+* ortb2.site.mobile
+* ortb2.site.ext
+* ortb2.site.publisher.ext
+* ortb2.device.ext
 * ortb2.user.ext.*
 * ortb2.user.data.*
+* ortb2.regs.ext
+* ortb2Imp.instl
+* ortb2Imp.rwdd
+* ortb2Imp.ext
+* mediaTypes.banner.ext
+* mediaTypes.video.ext
+* mediaTypes.audio.ext
+* ortb2Imp.banner.ext
+* ortb2Imp.video.ext
+* ortb2Imp.audio.ext
 
 Here is an example first party data that insticator support.
 
@@ -144,6 +163,14 @@ pbjs.setConfig({
 | `video.delivery`       | optional    | Supported delivery methods (1 = streaming, 2 = progressive, 3 = download). If none specified, assume all are supported. | `[1, 2]`                      |
 | `video.pos`            | optional    | Ad position on screen. (see OpenRTB v2.5 section 5.4 for options)     | `1`                           |
 | `video.api`            | optional    | List of supported API frameworks for this impression. Supported API frameworks are between 1-7 (See [OpenRTB v2.6](https://github.com/InteractiveAdvertisingBureau/AdCOM/blob/develop/AdCOM%20v1.0%20FINAL.md) List API Frameworks) | `[2, 7]`                   |
+| `video.ext`            | optional    | Exchange-specific extensions                                    | `{ custom: 'value' }`         |
+| `video.podid`          | optional    | Identifier of the ad pod this impression belongs to             | `'pod-1'`                     |
+| `video.podseq`         | optional    | Ad pod position in the content stream. -1 last, 0 any, 1 first  | `0`                           |
+| `video.poddur`         | optional    | Total duration of the ad pod in seconds                         | `60`                          |
+| `video.slotinpod`      | optional    | Ad position in the pod. -1 last, 0 any, 1 first, 2 first/last   | `0`                           |
+| `video.mincpmpersec`   | optional    | Minimum CPM per second the publisher will accept                | `0.5`                         |
+| `video.maxseq`         | optional    | Maximum number of ads allowed in the pod                        | `4`                           |
+| `video.rqddurs`        | optional    | Exact durations in seconds that the publisher will accept       | `[15, 30]`                    |
 
 ### Example
 
@@ -179,5 +206,70 @@ var adUnits = [
             }
         }],
         ...
+    }];
+```
+
+#### Audio parameters
+
+{: .table .table-bordered .table-striped }
+| Name                   | Scope       | Description                                                     | Example                       |
+|------------------------|-------------|-----------------------------------------------------------------|-------------------------------|
+| `audio.mimes`          | recommended | Audio MIME types                                                | `['audio/mp4',`<br/>`'audio/mpeg',`<br/>`'audio/aac',`<br/>`'audio/ogg']` |
+| `audio.minduration`    | optional    | Minimum audio ad duration in seconds                            | `5`                           |
+| `audio.maxduration`    | optional    | Maximum audio ad duration in seconds                            | `30`                          |
+| `audio.poddur`         | optional    | Total time in seconds advertisers may fill for a dynamic audio ad pod | `120`                   |
+| `audio.protocols`      | optional    | Supported audio bid response protocol values. (see OpenRTB v2.5 section 5.8 for options) | `[2, 3, 5, 6, 7, 8]` |
+| `audio.startdelay`     | optional    | Start delay in seconds for pre-roll, mid-roll or post-roll placements. (see OpenRTB v2.5 section 5.12 for options) | `0` |
+| `audio.rqddurs`        | optional    | Exact acceptable creative durations in seconds                  | `[15, 30]`                    |
+| `audio.podid`          | optional    | Identifier marking the impressions that belong to the same audio ad pod | `'pod-1'`               |
+| `audio.podseq`         | optional    | Sequence of the audio ad pod within the content stream, where -1 = last pod, 0 = any pod, 1 = first pod | `0` |
+| `audio.sequence`       | optional    | For multiple ads in the same bid request, to allow coordinated delivery | `1` |
+| `audio.slotinpod`      | optional    | Slot position in the pod the seller can guarantee delivery against, where -1 = last ad, 0 = any ad, 1 = first ad, 2 = first or last ad | `1` |
+| `audio.mincpmpersec`   | optional    | Minimum CPM per second, a price floor for the dynamic portion of an audio ad pod | `0.05`        |
+| `audio.battr`          | optional    | Blocked creative attributes. (see OpenRTB v2.5 section 5.3 for options) | `[13, 14]`             |
+| `audio.maxextended`    | optional    | Max extended ad duration beyond `maxduration` if extension is allowed. Blank or 0 = blocked, -1 = no time limit. | `30` |
+| `audio.minbitrate`     | optional    | Minimum bit rate in Kbps                                        | `32`                          |
+| `audio.maxbitrate`     | optional    | Maximum bit rate in Kbps                                        | `320`                         |
+| `audio.delivery`       | optional    | Supported delivery methods (1 = streaming, 2 = progressive, 3 = download). If none specified, assume all are supported. | `[1, 2]` |
+| `audio.companionad`    | optional    | Array of Banner objects for the available companion ads         | `[{ w: 300, h: 250 }]`        |
+| `audio.api`            | optional    | List of supported API frameworks for this impression. (see OpenRTB v2.5 section 5.6 for options) | `[2, 7]` |
+| `audio.companiontype`  | optional    | Supported companion ad types. (see OpenRTB v2.5 section 5.14 for options) | `[1, 2]`              |
+| `audio.maxseq`         | optional    | Maximum number of ads that can be played in an ad pod           | `4`                           |
+| `audio.feed`           | optional    | Type of audio feed. 1 = Music Streaming Service, 2 = FM/AM Broadcast, 3 = Podcast, 4 = Catch-up Radio, 5 = Web Radio, 6 = Video Game, 7 = Text to Speech. | `3` |
+| `audio.stitched`       | optional    | Indicates if the ad is stitched into the audio content, where 0 = no, 1 = yes | `0`             |
+| `audio.nvol`           | optional    | Volume normalization mode. 0 = None, 1 = Ad Volume Average Normalized to Content, 2 = Ad Volume Peak Normalized to Content, 3 = Ad Loudness Normalized to Content, 4 = Custom. | `1` |
+| `audio.durfloors`      | optional    | Floor prices for audio creatives of various durations           | `[{ maxdur: 15,`<br/>`bidfloor: 5 }]` |
+| `audio.ext`            | optional    | Exchange-specific extensions                                    | `{ custom: 'value' }`         |
+
+### Example
+
+```javascript
+var adUnitsAudioOnly = [
+    {
+        code: 'insticator-audio-ad-1',
+        mediaTypes: {
+            audio: {
+                mimes: ['audio/mp4', 'audio/mpeg', 'audio/aac', 'audio/ogg'],
+                minduration: 5,
+                maxduration: 30,
+                protocols: [2, 3, 5, 6, 7, 8],
+                startdelay: 0,
+                minbitrate: 32,
+                maxbitrate: 320,
+                delivery: [1, 2],
+                api: [2, 7],
+                battr: [13, 14],
+                feed: 3,
+                stitched: 0,
+                nvol: 1
+            }
+        },
+        bids: [{
+            bidder: 'insticator',
+            params: {
+                adUnitId: 'example_adunit_id',
+                publisherId: 'example_publisher_id',
+            }
+        }]
     }];
 ```
